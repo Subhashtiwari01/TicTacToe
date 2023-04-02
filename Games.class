@@ -1,0 +1,139 @@
+
+import java.util.Scanner;
+
+public class Game {
+    Player[] players;
+    Board board;
+    int turn;
+    int moves;
+    boolean gameOver;
+    String zero;
+    String cross;
+
+    Game(Player[] var1, Board var2) {
+        this.players = var1;
+        this.board = var2;
+        this.turn = 0;
+        this.moves = 0;
+        this.gameOver = false;
+        this.zero = "000";
+        this.cross = "XXX";
+    }
+
+    private void printBoard() {
+        for(int var1 = 0; var1 < this.board.size; ++var1) {
+            for(int var2 = 0; var2 < this.board.size; ++var2) {
+                System.out.print(this.board.matrix[var1][var2] + " ");
+            }
+
+            System.out.println();
+        }
+
+    }
+
+    public void play() {
+        this.printBoard();
+        int var1 = this.board.size;
+
+        while(!this.gameOver) {
+            ++this.moves;
+            int[] var2 = this.getIndex();
+            int var3 = var2[0];
+            int var4 = var2[1];
+            this.board.matrix[var3][var4] = this.players[this.turn].getSymbol();
+            if (this.moves >= var1 * var1) {
+                System.out.println("Game Draw");
+                this.printBoard();
+                return;
+            }
+
+            if (this.checkCombinations()) {
+                this.gameOver = true;
+                this.printBoard();
+                Player var10001 = this.players[this.turn];
+                System.out.println("Winner is : " + var10001.getName());
+                return;
+            }
+
+            this.turn = 1 - this.turn;
+            this.printBoard();
+        }
+
+    }
+
+    private int[] getIndex() {
+        while(true) {
+            Player var10001 = this.players[this.turn];
+            System.out.println("Player : " + var10001.getName() + " which position(x,y) do you want to insert?");
+            Scanner var1 = new Scanner(System.in);
+            int var2 = var1.nextInt();
+            int var3 = var1.nextInt();
+            if (var2 >= 0 && var3 >= 0 && var2 < this.board.size && var3 < this.board.size) {
+                if (this.board.matrix[var2][var3] == '-') {
+                    return new int[]{var2, var3};
+                }
+
+                System.out.println("Cell is occupied");
+            } else {
+                System.out.println("Invalid Index");
+            }
+        }
+    }
+
+    private boolean checkCombinations() {
+        int var1 = this.board.size;
+
+        int var2;
+        String var3;
+        int var4;
+        for(var2 = 0; var2 < var1; ++var2) {
+            var3 = "";
+
+            for(var4 = 0; var4 < var1; ++var4) {
+                var3 = var3 + this.board.matrix[var2][var4];
+            }
+
+            if (var3.equals(this.zero) || var3.equals(this.cross)) {
+                return true;
+            }
+        }
+
+        for(var2 = 0; var2 < var1; ++var2) {
+            var3 = "";
+
+            for(var4 = 0; var4 < var1; ++var4) {
+                var3 = var3 + this.board.matrix[var4][var2];
+            }
+
+            if (var3.equals(this.zero) || var3.equals(this.cross)) {
+                return true;
+            }
+        }
+
+        String var5 = "";
+        int var6 = 0;
+
+        for(var4 = 0; var6 < var1; ++var4) {
+            var5 = var5 + this.board.matrix[var6][var4];
+            ++var6;
+        }
+
+        if (!var5.equals(this.zero) && !var5.equals(this.cross)) {
+            var5 = "";
+            var6 = 0;
+
+            for(var4 = var1 - 1; var6 < var1; --var4) {
+                var5 = var5 + this.board.matrix[var6][var4];
+                ++var6;
+            }
+
+            if (!var5.equals(this.zero) && !var5.equals(this.cross)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+}
