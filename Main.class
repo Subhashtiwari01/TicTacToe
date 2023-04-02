@@ -1,0 +1,18 @@
+
+public class Main {
+    public Main() {
+    }
+
+    public static void main(String[] var0) {
+        Player var1 = new Player();
+        var1.setName("James");
+        var1.setSymbol('0');
+        Player var2 = new Player();
+        var2.setName("Harry");
+        var2.setSymbol('X');
+        Player[] var3 = new Player[]{var1, var2};
+        Board var4 = new Board(3);
+        Game var5 = new Game(var3, var4);
+        var5.play();
+    }
+}
